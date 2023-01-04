@@ -19,7 +19,7 @@
 void led_init();
 void led_routine(bool loopForever);
 void lowPowerRun();
-int modeUpdate(int serialError);
+int modeUpdate(bool ignore);
 int gammaValue(int min, int max);
 
 // const uint8_t PROGMEM gamma8[] = {

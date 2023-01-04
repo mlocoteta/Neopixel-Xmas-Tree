@@ -13,7 +13,7 @@
 
 RV8803 rtc;  // declare global
 
-int rtc_init() {
+int rtc_init() {    // initializes RTC, and returns a failure type based on the current time vs compiler time stored to eeprom
     bool compilerTimeAvailable = 0;
 
     uint8_t ct_B3 = (COMPILER_TIME & 0xff000000UL) >> 24;  // Break 32-bit into 4x 8-bit bytes
@@ -21,7 +21,7 @@ int rtc_init() {
     uint8_t ct_B1 = (COMPILER_TIME & 0x0000ff00UL) >> 8;
     uint8_t ct_B0 = (COMPILER_TIME & 0x000000ffUL);
 
-    if (EEPROM.read(3) != ct_B3 || EEPROM.read(2) != ct_B2 || EEPROM.read(1) != ct_B1 || EEPROM.read(0) != ct_B0) {  // Write compiler time into EEPROM
+    if (EEPROM.read(3) != ct_B3 || EEPROM.read(2) != ct_B2 || EEPROM.read(1) != ct_B1 || EEPROM.read(0) != ct_B0) {  // Write compiler time into EEPROM... we really don't need all 4 bytes but was easier during troubleshooting
         EEPROM.write(3, ct_B3);
         EEPROM.write(2, ct_B2);
         EEPROM.write(1, ct_B1);
@@ -35,7 +35,7 @@ int rtc_init() {
         return -1;
     }
 
-    if (rtc.updateTime() == false) {  // Check that we can talk to RTC.
+    if (rtc.updateTime() == false) {  // Check that we can get the time
         return -2;
     }
 
@@ -63,14 +63,13 @@ bool rtcWakeup() {
     uint8_t currentHours = rtc.getHours();
     uint8_t currentMonth = rtc.getMonth();
 
-    if (currentHours >= 21) {
+    if (currentHours >= 21 && currentHours <24) { //Run at 9PM, 10PM and 11PM
         setHour = currentHours + 1;
+    } else {
+        setHour = 21;                               // Default is 9PM
     }
 
-    if (setHour == 24) {  // Not sure if rollover is smart enough to handle this
-        setHour = 21;
-    }
-    if (currentMonth == 12 || currentMonth == 1) {
+    if (currentMonth == 12 || currentMonth == 1) { //Run Jan and Feb
         rtc.setItemsToMatchForAlarm(MINUTE_ALARM_ENABLE, HOUR_ALARM_ENABLE, WEEKDAY_ALARM_ENABLE, DATE_ALARM_ENABLE);
     } else {
         rtc.setItemsToMatchForAlarm(MINUTE_ALARM_ENABLE, HOUR_ALARM_ENABLE, WEEKDAY_ALARM_ENABLE, !DATE_ALARM_ENABLE);

@@ -8,7 +8,7 @@
 #define SCL PB2
 #define INT PB1         // For device wakeup/ selection
 #define LED_ENABLE PB4  // Enables boost to power LEDs
-#define VIN PB5         // Also reset function. Needs high voltage programmer
+#define VIN 0         // Also reset function. Needs high voltage programmer. Not clear why PB5 can't be used here?
 #define DOUT PB3        // Data output to LEDs
 #endif
 

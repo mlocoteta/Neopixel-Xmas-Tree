@@ -28,7 +28,7 @@ void Sparkle(byte red, byte green, byte blue, int SpeedDelay);
 void SnowSparkle(byte red, byte green, byte blue, int SparkleDelay, int SpeedDelay);
 void RunningLights(byte red, byte green, byte blue, int WaveDelay);
 byte *Wheel(byte WheelPos);
-void rainbowCycle(int SpeedDelay, int brightness);
+void rainbowCycle(int SpeedDelay, int brightness, bool onBattery);
 void theaterChase(byte red, byte green, byte blue, int SpeedDelay);
 void theaterChaseRainbow(int SpeedDelay, int dimness);
 void setPixelHeatColor(int Pixel, byte temperature);

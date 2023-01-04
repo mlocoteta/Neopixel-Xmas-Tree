@@ -1,5 +1,5 @@
 
-// Credit:
+// Original Credit: https://www.tweaking4all.com/hardware/arduino/arduino-all-ledstrip-effects-in-one/
 #include "patterns.h"
 
 #include <Adafruit_NeoPixel.h>
@@ -292,7 +292,6 @@ void TwinkleRandom(int Count, int SpeedDelay, boolean OnlyOne, int max) {
             setAll(0, 0, 0);
         }
     }
-
     delay(SpeedDelay);
 }
 
@@ -397,10 +396,10 @@ byte *Wheel(byte WheelPos) {
     return c;
 }
 
-void rainbowCycle(int SpeedDelay, int brightness) {
+void rainbowCycle(int SpeedDelay, int brightness, bool onBattery) {
     byte *c;
     uint16_t i, j;
-
+    
     for (j = 0; j < 256 * 5; j++) {  // 5 cycles of all colors on wheel
         for (i = 0; i < NUM_LEDS; i++) {
             c = Wheel(((i * 256 / NUM_LEDS) + j) & 255);
@@ -408,7 +407,12 @@ void rainbowCycle(int SpeedDelay, int brightness) {
         }
         showStrip();
         delay(SpeedDelay);
+        analogRead(VIN);
+            if (onBattery == false && analogRead(VIN) < 750) {
+            break;;
+        }
     }
+
 }
 
 void theaterChase(byte red, byte green, byte blue, int SpeedDelay) {
