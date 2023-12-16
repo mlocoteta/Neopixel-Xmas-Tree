@@ -63,7 +63,7 @@ bool rtcWakeup() {
     uint8_t currentHours = rtc.getHours();
     uint8_t currentMonth = rtc.getMonth();
 
-    if (currentHours >= 21 && currentHours <24) { //Run at 9PM, 10PM and 11PM
+    if (currentHours == 21 || currentHours == 22) { //Run at 9PM (else), 10PM (9PM + 1) and (10PM + 1) 11PM
         setHour = currentHours + 1;
     } else {
         setHour = 21;                               // Default is 9PM
@@ -72,8 +72,9 @@ bool rtcWakeup() {
     if (currentMonth == 12 || currentMonth == 1) { //Run Jan and Feb
         rtc.setItemsToMatchForAlarm(MINUTE_ALARM_ENABLE, HOUR_ALARM_ENABLE, WEEKDAY_ALARM_ENABLE, DATE_ALARM_ENABLE);
     } else {
+        setHour = 21;
         rtc.setItemsToMatchForAlarm(MINUTE_ALARM_ENABLE, HOUR_ALARM_ENABLE, WEEKDAY_ALARM_ENABLE, !DATE_ALARM_ENABLE);
-        rtc.setAlarmDate(0);
+        rtc.setAlarmDate(1);
     }
 
     rtc.setAlarmMinutes(0);
